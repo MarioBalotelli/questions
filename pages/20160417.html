@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>2016/04/17思考题</title>
+	</head>
+	<body>
+		<h1>如何实现不使用new关键字来调用构造函数，并实现类似jquery的链式调用。</h1>
+		<h2>答案：</h2>
+  </body>
+</html>
+<script>
+(function(window,undefined){
+function Fn(){
+  if(!(this instanceof Fn)){
+    return new Fn();
+  }
+  this.name="Fn";
+}
+
+Fn.prototype={
+  fn1:function(){
+    document.write("fn1");
+    return this;
+  },
+  fn2:function(){
+    document.write("fn2");
+    return this;
+  }
+}
+Fn().fn1().fn2();
+})(window);
+</script>
