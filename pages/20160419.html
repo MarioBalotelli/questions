@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>2016/04/19思考题</title>
+</head>
+<body>
+    <h1>你能想出的javascript的继承写法有哪些，并尝试一一实现一下</h1>
+    <p>
+        <a href="http://www.cnblogs.com/wangfupeng1988/tag/%E5%8E%9F%E5%9E%8B/" target="blank">相关知识点参考资料</a>
+    </p>
+</body>
+<script type="text/javascript">
+    //参考答案
+    //类式继承
+    function ParentClass() {
+        this.Pname = "ParentClass";
+    }
+
+    ParentClass.prototype = {
+        getPName: function () {
+            return this.Pname;
+        }
+    };
+
+    function ChildClass() {
+        this.Cname = "ChildClass";
+    }
+
+    ChildClass.prototype = new ParentClass();
+    ChildClass.prototype.constructor = ChildClass;
+    ChildClass.prototype.getCName = function () {
+        return this.Cname;
+    };
+
+    console.log(new ChildClass());
+
+
+    //构造函数继承
+    function Parent() {
+        this.Pname = "Parent";
+        this.id = 1;
+    }
+
+    Parent.prototype = {
+        getPName: function () {
+            return this.Pname;
+        }
+    };
+
+    function Child() {
+        Parent.call(this);
+        this.Cname = "Child";
+    }
+
+    console.log(new Child());
+
+    //原型式继承
+    function P(obj) {
+        function F() { }
+        F.prototype = obj;
+        return new F();
+    }
+
+    //测试
+    var object = {
+        a: 1,
+        b: 2
+    };
+    console.log(P(object));
+
+
+    //寄生式继承
+    var obj = {
+        name: "obj",
+        id: 1
+    };
+
+    function createObj(obj) {
+        var o = new P(obj);
+        o.getName = function () {
+            return name;
+        };
+        return o;
+    }
+
+    console.log(createObj(obj));
+
+
+    //总结一下前面的继承方式
+    function inherit(parent, child) {
+        var p = P(parent);//调用前面原型式继承
+        p.constructor = parent;
+        child.prototype = p;
+    }
+
+    //测试
+    //父
+    function Par() {
+        this.par = "Par";
+    }
+    Par.prototype = {
+        fn1: function () {
+
+        },
+        fn2: function () {
+
+        }
+    };
+    //子
+    function Chi() {
+        this.chi = "Chi";
+    }
+    inherit(Par, Chi);
+    console.log(Chi);
+
+    //多继承
+    //我们先来简单实现一个类似jquery的extend的方法
+    var extend = function () {
+        var args = arguments, target = args[0] || {}, k = 0, l = args.length;
+        while (++k <= l) {
+            var arg = args[k];
+            for (var prop in arg) {
+                target[prop] = arg[prop];
+            }
+        }
+        return target;
+    };
+
+    //下面定义几个类
+    function A() {
+        this.aName = "A";
+    }
+
+    A.prototype = {
+        getAName: function () {
+            return this.aName;
+        }
+    };
+
+    function B() {
+        this.bName = "B";
+    }
+
+    B.prototype = {
+        getBName: function () {
+            return this.bName;
+        }
+    };
+
+    function C() {
+        this.aName = "C";
+    }
+
+    C.prototype = {
+        getCName: function () {
+            return this.cName;
+        }
+    };
+
+    //我们让D来继承A、B、C
+    function D() {
+        A.call(this);
+        B.call(this);
+        C.call(this);
+        this.aName = "D";
+    }
+
+    D.prototype = extend(C.prototype, B.prototype, A.prototype, {
+        getDName: function () {
+            return this.dName;
+        }
+    });
+
+    console.log(new D());
+</script>
+</html>

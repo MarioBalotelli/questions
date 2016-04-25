@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>20160418思考题</title>
+    <style>
+        h1 {
+            color: red;
+        }
+
+        h2 {
+            color: blue;
+        }
+
+        pre {
+            color: orange;
+        }
+
+        p {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>思考构造函数中的属性与原型中属性的区别，以及二者各自的优</h1>
+    <h2>代码解释：</h2>
+<pre class="prettyprint lang-js">
+     (function(window,undefined){
+	function Fn(){
+	  this.name="Fn";
+	  this.fn1=function(){
+		
+	  };
+	  //....
+	}
+	
+	Fn.prototype={
+	  this.fn2=function(){
+	  
+	  },
+	  this.fn3=function(){
+	  
+	  }
+	}
+     })(window)
+</pre>
+    <p>
+        <a href="http://www.cnblogs.com/wangfupeng1988/tag/%E5%8E%9F%E5%9E%8B/" target="blank">相关知识点参考资料</a>
+    </p>
+
+    <br>
+    <p>
+        <span style="color:#E56600;font-family:'Microsoft YaHei';">其实参考资料中已经讲的很详细了，我这里只说几个关键点。</span><br />
+        <br />
+        <span style="color:#000000;font-family:'Microsoft YaHei';background-color:#60D978;">区别：</span><br />
+        <span style="font-family:Microsoft YaHei;"></span><br />
+        <span style="color:#E56600;font-family:'Microsoft YaHei';"> 构造函数中的属性：属性每次实例化都会重新创建，每次都是新的引用。</span><br />
+        <br />
+        <span style="color:#E56600;font-family:'Microsoft YaHei';"> 原型中的属性：每次实例化不会重新创建，所有实例对象均引用。</span><br />
+        <br />
+        <span style="color:#000000;font-family:'Microsoft YaHei';background-color:#60D978;">优劣：</span>
+    </p>
+    <p>
+        <br />
+        <span style="color:#E56600;font-family:'Microsoft YaHei';"> 构造函数中的属性：优点是每个实例的属性相互独立，改变某个实例的属性不会影响其他属性；</span><br />
+        <br />
+        <span style="color:#E56600;font-family:'Microsoft YaHei';">               缺点是每次实例化都要重新创建，增加了开销，属性越多，实例化次数越多，开销越大。</span><br />
+        <span style="color:#E56600;font-family:'Microsoft YaHei';">  </span><br />
+        <span style="color:#E56600;font-family:'Microsoft YaHei';"> 原型中的属性：优点是只在定义的时候开销一次；</span><br />
+        <br />
+        <span style="color:#E56600;font-family:'Microsoft YaHei';">           缺点是牵一发动全身，改变原型的某个属性，所有实例中的这个属性都要发生变化。</span><br />
+        <br />
+        <span style="color:#000000;font-family:'Microsoft YaHei';background-color:#60D978;">总结：</span>
+        <span style="color:#E56600;font-family:'Microsoft YaHei';"> 这两种定义属性的方式优劣相互互补，在定义构造函数的时候，合理利用这两种方法，是编写高质量代码的前提。</span><br />
+        <br />
+        <span style="color:#000000;font-family:'Microsoft YaHei';background-color:#60D978;">小技巧：</span>
+    </p>
+    <p>
+        <span style="color:#E56600;"><span style="font-family:Microsoft YaHei;">     </span><span style="font-family:Microsoft YaHei;">js属性查找机制是优先普通属性，如果查找不到再到原型链中查找；</span></span><br />
+        <br />
+        <span style="color:#E56600;font-family:'Microsoft YaHei';">      利用这种方法，可以对实例的对象添加属性，来达到重写原型链中的属性，而不影响到其他实例的属性目的，也是对于原型属性缺点的补足。</span>
+    </p>
+    <p>
+        <br />
+    </p>
+</body>
+</html>
