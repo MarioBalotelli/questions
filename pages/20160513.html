@@ -8,3 +8,92 @@
     <h1>简述链式调用的实现原理，并简述jquery链式调用的实现原理</h1>
 </body>
 </html>
+<script type="text/javascript">
+    /*
+        很多人被问到链式调用的时候都会说return this，但其实链式调用并不是因为return this
+        我们来看下面的栗子
+    */
+    var fn1 = function () {
+        console.log("fn1:"+this);
+        return this;
+    },
+    fn2 = function () {
+        console.log("fn2:"+this);
+        return this;
+    },
+    fn3 = function () {
+        console.log("fn3:" + this);
+        return this;
+    },
+    fn4 = function () {
+        console.log("fn4:" + this);
+        return this;
+    };
+
+    var a = {
+        fn1: fn1,
+        fn2: fn2
+    };
+    var b = {
+        fn3: fn3,
+        fn4: fn4
+    };
+    fn1().fn2();//fn1:window fn2:window
+    a.fn1().fn2();//fn1:a fn2:a
+    b.fn3().fn4();//fn3:b fn3:b
+    a.fn1().fn2().fn3().fn4();//fn1:a fn2:a 报错a.fn1(...).fn2(...).fn3 is not a function
+
+    /*
+     * 由此可见并不是return this这么简单，那么到链式调用的原理是什么呢
+     * 其实链式调用的原理很简单，就是返回下一个要被调用函数的父级
+     * 我们来看下面的栗子
+     */
+
+    var c = {
+        fn5: function () {
+            console.log("fn5:" + this);
+            return d;
+        }
+    },
+    d = {
+        fn6: function () {
+            console.log("fn6" + this);
+            return c;
+        }
+    };
+
+    c.fn5().fn6().fn5().fn6();//fn5:c fn6:d fn5:c fn6:d
+
+    /*
+     * 那么jquery又是如何实现链式调用的呢
+     * 请继续看下面的栗子
+     */
+    //声明一个空的构造函数
+    function Factory() {
+
+    }
+    //构造函数的原型
+    Factory.prototype = {
+        fn7: function () {
+            console.log("fn7:" + this);
+            return this;
+        },
+        fn8: function () {
+            console.log("fn8:" + this);
+            return this;
+        },
+        fn9: function () {
+            console.log("fn9:" + this);
+            return this;
+        }
+    };
+    //构造函数的实例
+    var o = new Factory();
+    o.fn7().fn8().fn9();//fn7:o fn8:o fn9:o
+
+    /*
+     * 上面由于构造函数原型链中的函数，this指向构造函数的实例，所以可以使用return this进行链式调用
+     * 这也是jquery链式调用的原理，jquery的选择器实质就是jquery的构造函数调用
+     * 结语：其实链式就是返回下一个要被调用函数的父级，并无其他解释
+     */
+</script>
